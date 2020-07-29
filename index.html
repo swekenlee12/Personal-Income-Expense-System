@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <!--
+        ===============
+        FIREBASE SDK
+        ===============
+    -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.js"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-firestore.js"></script>
+
+    <!-- Style Sheet -->
+    <link rel="stylesheet" href="style/styles.css">
+
+
+    <title>Personal Income/Expense Management System</title>
+  </head>
+  <body>
+    <!--
+        ====== 
+        Navbar
+        ======
+    -->
+    <nav class="navbar">
+        <span class="navbar-brand mb-0 h1">PIEMS</span>
+        <ul class="navbar-nav">
+        <li class="signinbtn nav-item"  style="display: none;" id="signin">
+           <a href="#" class="nav-link" data-toggle="modal" data-target="#modal">Sign In </a>
+        </li>
+
+        <li class="signoutbtn nav-item" style="display: none;">
+          <a href="#" class="nav-link"  data-toggle="modal" data-target="#modal-expense" >Add New Expense</a>
+      </li>
+
+        <li class="signoutbtn nav-item" style="display: none;" id="signout">
+         <a href="#" class="nav-link" > Sign Out </a>
+      </li>
+        </ul>
+    </nav>
+
+    <!--
+        ==========
+        MODAL
+        ==========
+    -->
+    <!-- Modal -->
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Sign In Form</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <!-- Form Login Start Here-->
+            <form class="sign-in-form">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Email address</label>
+                  <input type="email" class="form-control" id="email">
+                </div>
+                <div class="form-group">
+                  <label for="password">Password</label>
+                  <input type="password" class="form-control" id="password">
+                </div>
+                <button type="submit" class="btn btn-primary">Sign In</button>
+              </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--
+    ==================
+    MODAL EXPENSE FORM
+    ==================
+  -->
+  <div class="modal fade" id="modal-expense" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Expense Input Form</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <!-- Form Login Start Here-->
+            <form class="expense-form">
+                <div class="form-group">
+                  <label>Type of Expense (Work/Home)</label>
+                  <input type="text" class="form-control" id="typeofexpense">
+                </div>
+                <div class="form-group">
+                  <label>Expense</label>
+                  <input type="text" class="form-control" id="expense">
+                </div>
+                <div class="form-group">
+                  <label>Amount</label>
+                  <input type="text" class="form-control" id="amount">
+                </div>
+                <button type="submit" class="btn btn-primary">Enter</button>
+              </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    <!--
+        =========
+        Jumbotron
+        =========
+    -->
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+          <h1 class="display-4">Personal Income/Expense Management System</h1>
+          <p class="lead"></p>
+        </div>
+      </div>
+
+
+      <!--
+        =====================
+        EXPENSE TRACKING LIST
+        =====================
+      -->
+      <div class="body-container">
+        <div class="container-expense">
+          <div class="top">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+          <ul class="list-render list-group"> </ul>
+        </div>
+        <!--
+        ======================
+        DISPLAY PIE CHART
+        ======================
+      -->
+
+      <div class="container-graph">
+      <div class="canvas"></div>
+     
+
+      <!--
+        =====================
+        DISPLAY EXPENSE TOTAL
+        =====================
+      -->
+      <div class="expense-body">
+        <ul class="expense-list">
+          
+        </ul>
+      </div>
+
+      </div>
+    </div> <!-- body-container ends here -->
+    <!--
+        =============
+        FIREBASE
+        =============
+    -->
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+          apiKey: "AIzaSyAm8dSJv-O-TPsLzazout6MXK5-_ify9_4",
+          authDomain: "finance2-fc6cf.firebaseapp.com",
+          databaseURL: "https://finance2-fc6cf.firebaseio.com",
+          projectId: "finance2-fc6cf"
+          
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+      </script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script src="app.js"></script>
+    <script src="links.js"></script>
+    <script src="graph.js"></script>
+</body>
+</html>

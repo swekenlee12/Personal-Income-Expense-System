@@ -1,0 +1,72 @@
+*{
+    box-sizing: border-box;
+}
+
+.body-container{
+    margin: 0 auto;
+}
+
+.container-expense {
+    margin: 0 auto;
+    width: 960px;
+    height: 580px;
+    border: 3px solid #f1f1f1;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    overflow: auto;
+  }
+
+  .dot {
+    height: 12px;
+    width: 12px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  
+  .top {
+    margin-bottom: 20px;
+    height: 40px;
+    padding: 10px;
+    background: #f1f1f1;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+  }
+
+.typeofexpense {
+    text-transform: capitalize;
+}
+
+.expense{
+    text-transform: capitalize;
+}
+
+.liWork {
+    border-left: 18px solid green;
+    text-transform: capitalize;
+    width: 900px;
+}
+.liPersonal {
+    border-left: 18px solid blue;
+    text-transform: capitalize;
+    width: 900px;
+}
+
+.totalExpense{
+   
+    width: 388px;
+   
+}
+.canvas {
+    margin-left: 20%;
+}
+
+.container-graph{
+    width: 960px;
+    display: flex;
+    position: absolute;
+    left: 22%;
+    justify-content: center;
+    margin-top: 45px;
+    padding: 0 30px;
+}
